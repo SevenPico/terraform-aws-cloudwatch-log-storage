@@ -1,11 +1,11 @@
 # ------------------------------------------------------------------------------
-# VPC Flow Logs KMS Key Policy Meta
+# VPC Flow Logs KMS Key Policy Context
 # ------------------------------------------------------------------------------
-module "kms_key_meta" {
-  source  = "registry.terraform.io/cloudposse/label/null"
-  version = "0.25.0"
-  context = module.vpc_flow_logs_cloudwatch_meta.context
-  enabled = var.create_kms_key && module.vpc_flow_logs_cloudwatch_meta.enabled
+module "kms_key_context" {
+  source  = "app.terraform.io/SevenPico/context/null"
+  version = "1.0.1"
+  context = module.vpc_flow_logs_cloudwatch_context.context
+  enabled = var.create_kms_key && module.vpc_flow_logs_cloudwatch_context.enabled
 }
 
 
@@ -13,7 +13,7 @@ module "kms_key_meta" {
 # VPC Flow Logs KMS Key Policy
 # ------------------------------------------------------------------------------
 data "aws_iam_policy_document" "kms_key" {
-  count = module.kms_key_meta.enabled ? 1 : 0
+  count = module.kms_key_context.enabled ? 1 : 0
   statement {
     sid     = "Enable IAM User Permissions"
     effect  = "Allow"
@@ -139,12 +139,15 @@ data "aws_iam_policy_document" "kms_key" {
 # VPC Flow Logs KMS Key
 # ------------------------------------------------------------------------------
 module "kms_key" {
-  source  = "registry.terraform.io/cloudposse/kms-key/aws"
-  version = "0.12.1"
-  context = module.kms_key_meta.context
+  source  = "app.terraform.io/SevenPico/kms-key/aws"
+  version = "0.12.1.1"
+  context = module.kms_key_context.self
 
-  description             = "KMS key for VPC Flow Logs in Cloudwatch."
-  deletion_window_in_days = 10
-  enable_key_rotation     = true
-  policy                  = join("", data.aws_iam_policy_document.kms_key.*.json)
+  customer_master_key_spec = "SYMMETRIC_DEFAULT"
+  deletion_window_in_days  = var.kms_key_deletion_window_in_days
+  description              = "KMS key for VPC Flogs in Cloudwatch."
+  enable_key_rotation      = var.kms_key_enable_key_rotation
+  key_usage                = "ENCRYPT_DECRYPT"
+  multi_region             = false
+  policy                   = join("", data.aws_iam_policy_document.kms_key.*.json)
 }

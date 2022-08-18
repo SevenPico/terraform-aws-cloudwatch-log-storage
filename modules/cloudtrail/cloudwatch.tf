@@ -1,17 +1,17 @@
 # ------------------------------------------------------------------------------
-# Cloudtrail Cloudwatch Meta
+# Cloudtrail Cloudwatch Context
 # ------------------------------------------------------------------------------
-module "cloudtrail_cloudwatch_meta" {
-  source     = "registry.terraform.io/cloudposse/label/null"
-  version    = "0.25.0"
-  context    = module.this.context
+module "cloudtrail_cloudwatch_context" {
+  source  = "app.terraform.io/SevenPico/context/null"
+  version = "1.0.1"
+  context    = module.context.self
   attributes = ["cloudtrail"]
 }
 
-module "cloudtrail_cloudwatch_role_meta" {
-  source     = "registry.terraform.io/cloudposse/label/null"
-  version    = "0.25.0"
-  context    = module.cloudtrail_cloudwatch_meta.context
+module "cloudtrail_cloudwatch_role_context" {
+  source  = "app.terraform.io/SevenPico/context/null"
+  version = "1.0.1"
+  context    = module.cloudtrail_cloudwatch_context.self
   attributes = ["role"]
 }
 
@@ -21,7 +21,7 @@ module "cloudtrail_cloudwatch_role_meta" {
 # ------------------------------------------------------------------------------
 module "cloudtrail_cloudwatch_log_storage" {
   source  = "../../"
-  context = module.cloudtrail_cloudwatch_meta
+  context = module.cloudtrail_cloudwatch_context.self
 
   kms_master_key_arn      = module.kms_key.key_arn
   log_group_name_override = var.log_group_name_override
@@ -33,7 +33,7 @@ module "cloudtrail_cloudwatch_log_storage" {
 # Cloudtrail Cloudwatch IAM
 # ------------------------------------------------------------------------------
 data "aws_iam_policy_document" "assume_role" {
-  count = module.cloudtrail_cloudwatch_meta.enabled ? 1 : 0
+  count = module.cloudtrail_cloudwatch_context.enabled ? 1 : 0
   statement {
     effect  = "Allow"
     actions = ["sts:AssumeRole"]
@@ -46,15 +46,15 @@ data "aws_iam_policy_document" "assume_role" {
 }
 
 resource "aws_iam_role" "cloudtrail_cloudwatch_logs" {
-  count              = module.cloudtrail_cloudwatch_meta.enabled ? 1 : 0
-  name               = module.cloudtrail_cloudwatch_role_meta.id
+  count              = module.cloudtrail_cloudwatch_context.enabled ? 1 : 0
+  name               = module.cloudtrail_cloudwatch_role_context.id
   assume_role_policy = data.aws_iam_policy_document.assume_role[0].json
-  tags               = module.cloudtrail_cloudwatch_meta.tags
+  tags               = module.cloudtrail_cloudwatch_context.tags
 }
 
 
 data "aws_iam_policy_document" "cloudtrail_cloudwatch_logs" {
-  count = module.cloudtrail_cloudwatch_meta.enabled ? 1 : 0
+  count = module.cloudtrail_cloudwatch_context.enabled ? 1 : 0
   statement {
     sid    = "WriteCloudWatchLogs"
     effect = "Allow"
@@ -71,13 +71,13 @@ data "aws_iam_policy_document" "cloudtrail_cloudwatch_logs" {
 }
 
 resource "aws_iam_policy" "cloudtrail_cloudwatch_logs" {
-  count  = module.cloudtrail_cloudwatch_meta.enabled ? 1 : 0
-  name   = "${module.cloudtrail_cloudwatch_role_meta.id}-policy"
+  count  = module.cloudtrail_cloudwatch_context.enabled ? 1 : 0
+  name   = "${module.cloudtrail_cloudwatch_role_context.id}-policy"
   policy = data.aws_iam_policy_document.cloudtrail_cloudwatch_logs[0].json
 }
 
 resource "aws_iam_policy_attachment" "cloudtrail_cloudwatch_logs" {
-  count      = module.cloudtrail_cloudwatch_meta.enabled ? 1 : 0
+  count      = module.cloudtrail_cloudwatch_context.enabled ? 1 : 0
   name       = "${aws_iam_policy.cloudtrail_cloudwatch_logs[0].name}-attachment"
   policy_arn = aws_iam_policy.cloudtrail_cloudwatch_logs[0].arn
   roles      = [aws_iam_role.cloudtrail_cloudwatch_logs[0].name]

@@ -19,3 +19,14 @@ variable "log_retention_days" {
 #  type    = string
 #  default = ""
 #}
+
+
+variable "kms_key_deletion_window_in_days" {
+  type    = number
+  default = 30
+}
+
+variable "kms_key_enable_key_rotation" {
+  type    = bool
+  default = true
+}
