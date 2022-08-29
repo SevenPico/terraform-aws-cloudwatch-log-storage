@@ -3,14 +3,14 @@
 # ------------------------------------------------------------------------------
 module "cloudtrail_cloudwatch_context" {
   source  = "app.terraform.io/SevenPico/context/null"
-  version = "1.0.1"
+  version = "1.0.2"
   context    = module.context.self
   attributes = ["cloudtrail"]
 }
 
 module "cloudtrail_cloudwatch_role_context" {
   source  = "app.terraform.io/SevenPico/context/null"
-  version = "1.0.1"
+  version = "1.0.2"
   context    = module.cloudtrail_cloudwatch_context.self
   attributes = ["role"]
 }
