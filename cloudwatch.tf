@@ -2,8 +2,8 @@
 # Cloudwatch Context
 # ------------------------------------------------------------------------------
 module "cloudwatch_context" {
-  source  = "app.terraform.io/SevenPico/context/null"
-  version = "1.0.2"
+  source  = "SevenPico/context/null"
+  version = "2.0.0"
   context = module.context.self
 }
 

@@ -2,8 +2,8 @@
 # Cloudtrail KMS Key Policy Context
 # ------------------------------------------------------------------------------
 module "kms_key_context" {
-  source  = "app.terraform.io/SevenPico/context/null"
-  version = "1.0.2"
+  source  = "SevenPico/context/null"
+  version = "2.0.0"
   context = module.cloudtrail_cloudwatch_context.self
   enabled = var.create_kms_key && module.cloudtrail_cloudwatch_context.enabled
 }
@@ -142,8 +142,8 @@ data "aws_iam_policy_document" "kms_key" {
 # Cloudtrail KMS Key
 # ------------------------------------------------------------------------------
 module "kms_key" {
-  source  = "app.terraform.io/SevenPico/kms-key/aws"
-  version = "0.12.1.2"
+  source  = "SevenPicoForks/kms-key/aws"
+  version = "2.0.0"
   context = module.kms_key_context.self
 
   customer_master_key_spec = "SYMMETRIC_DEFAULT"
