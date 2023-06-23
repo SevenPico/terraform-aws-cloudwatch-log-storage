@@ -54,11 +54,11 @@ data "aws_iam_policy_document" "kms_key" {
       identifiers = ["vpc-flow-logs.amazonaws.com"]
     }
     resources = ["*"]
-#    condition {
-#      test     = "StringLike"
-#      variable = "kms:EncryptionContext:aws:cloudtrail:arn"
-#      values   = ["arn:${data.aws_partition.current.partition}:cloudtrail:*:${data.aws_caller_identity.current.account_id}:trail/*"]
-#    }
+    #    condition {
+    #      test     = "StringLike"
+    #      variable = "kms:EncryptionContext:aws:cloudtrail:arn"
+    #      values   = ["arn:${data.aws_partition.current.partition}:cloudtrail:*:${data.aws_caller_identity.current.account_id}:trail/*"]
+    #    }
   }
   statement {
     sid     = "Allow VPC Flow Logs to describe key"
@@ -88,11 +88,11 @@ data "aws_iam_policy_document" "kms_key" {
       variable = "kms:CallerAccount"
       values   = [data.aws_caller_identity.current.account_id]
     }
-#    condition {
-#      test     = "StringLike"
-#      variable = "kms:EncryptionContext:aws:cloudtrail:arn"
-#      values   = ["arn:${data.aws_partition.current.partition}:cloudtrail:*:${data.aws_caller_identity.current.account_id}:trail/*"]
-#    }
+    #    condition {
+    #      test     = "StringLike"
+    #      variable = "kms:EncryptionContext:aws:cloudtrail:arn"
+    #      values   = ["arn:${data.aws_partition.current.partition}:cloudtrail:*:${data.aws_caller_identity.current.account_id}:trail/*"]
+    #    }
   }
   statement {
     sid     = "Allow alias creation during setup"
@@ -114,29 +114,29 @@ data "aws_iam_policy_document" "kms_key" {
     }
     resources = ["*"]
   }
-#  statement {
-#    sid    = "Enable cross account log decryption"
-#    effect = "Allow"
-#    actions = [
-#      "kms:Decrypt",
-#      "kms:ReEncryptFrom",
-#    ]
-#    principals {
-#      type        = "AWS"
-#      identifiers = ["*"]
-#    }
-#    condition {
-#      test     = "StringEquals"
-#      variable = "kms:CallerAccount"
-#      values   = [data.aws_caller_identity.current.account_id]
-#    }
-#    condition {
-#      test     = "StringLike"
-#      variable = "kms:EncryptionContext:aws:cloudtrail:arn"
-#      values   = ["arn:${data.aws_partition.current.partition}:cloudtrail:*:${data.aws_caller_identity.current.account_id}:trail/*"]
-#    }
-#    resources = ["*"]
-#  }
+  #  statement {
+  #    sid    = "Enable cross account log decryption"
+  #    effect = "Allow"
+  #    actions = [
+  #      "kms:Decrypt",
+  #      "kms:ReEncryptFrom",
+  #    ]
+  #    principals {
+  #      type        = "AWS"
+  #      identifiers = ["*"]
+  #    }
+  #    condition {
+  #      test     = "StringEquals"
+  #      variable = "kms:CallerAccount"
+  #      values   = [data.aws_caller_identity.current.account_id]
+  #    }
+  #    condition {
+  #      test     = "StringLike"
+  #      variable = "kms:EncryptionContext:aws:cloudtrail:arn"
+  #      values   = ["arn:${data.aws_partition.current.partition}:cloudtrail:*:${data.aws_caller_identity.current.account_id}:trail/*"]
+  #    }
+  #    resources = ["*"]
+  #  }
   statement {
     sid    = "Allow logs KMS access"
     effect = "Allow"
