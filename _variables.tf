@@ -36,3 +36,15 @@ variable "kms_master_key_arn" {
   default     = ""
   description = "The AWS KMS master key ARN used for the SSE-KMS encryption."
 }
+
+variable "s3_bucket_name" {
+  type        = string
+  default     = ""
+  description = "The S3 Bucket name where the logs will be transferred."
+}
+
+variable "s3_bucket_access_role_arn" {
+  type        = string
+  default     = ""
+  description = "The S3 Bucket access role arn value."
+}
