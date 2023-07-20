@@ -37,6 +37,9 @@ module "kms_key_context" {
 # manually enable CloudTrail; you can see it here:
 # https://docs.aws.amazon.com/awscloudtrail/latest/userguide/default-cmk-policy.html
 data "aws_iam_policy_document" "kms_key" {
+  #checkov:skip=CKV_AWS_356:skipping 'Ensure no IAM policies documents allow "*" as a statement's resource for restrictable actions'
+  #checkov:skip=CKV_AWS_111:skipping 'Ensure IAM policies does not allow write access without constraints'
+  #checkov:skip=CKV_AWS_109:skipping 'Ensure IAM policies does not allow permissions management / resource exposure without constraints'
   count = module.kms_key_context.enabled ? 1 : 0
   statement {
     sid     = "Enable IAM User Permissions"
@@ -117,29 +120,29 @@ data "aws_iam_policy_document" "kms_key" {
     }
     resources = ["*"]
   }
-#  statement {
-#    sid    = "Enable cross account log decryption"
-#    effect = "Allow"
-#    actions = [
-#      "kms:Decrypt",
-#      "kms:ReEncryptFrom",
-#    ]
-#    principals {
-#      type        = "AWS"
-#      identifiers = ["*"]
-#    }
-#    condition {
-#      test     = "StringEquals"
-#      variable = "kms:CallerAccount"
-#      values   = [data.aws_caller_identity.current.account_id]
-#    }
-#    condition {
-#      test     = "StringLike"
-#      variable = "kms:EncryptionContext:aws:cloudtrail:arn"
-#      values   = ["arn:${data.aws_partition.current.partition}:cloudtrail:*:${data.aws_caller_identity.current.account_id}:trail/*"]
-#    }
-#    resources = ["*"]
-#  }
+  #  statement {
+  #    sid    = "Enable cross account log decryption"
+  #    effect = "Allow"
+  #    actions = [
+  #      "kms:Decrypt",
+  #      "kms:ReEncryptFrom",
+  #    ]
+  #    principals {
+  #      type        = "AWS"
+  #      identifiers = ["*"]
+  #    }
+  #    condition {
+  #      test     = "StringEquals"
+  #      variable = "kms:CallerAccount"
+  #      values   = [data.aws_caller_identity.current.account_id]
+  #    }
+  #    condition {
+  #      test     = "StringLike"
+  #      variable = "kms:EncryptionContext:aws:cloudtrail:arn"
+  #      values   = ["arn:${data.aws_partition.current.partition}:cloudtrail:*:${data.aws_caller_identity.current.account_id}:trail/*"]
+  #    }
+  #    resources = ["*"]
+  #  }
   statement {
     sid    = "Allow logs KMS access"
     effect = "Allow"

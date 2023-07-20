@@ -23,15 +23,15 @@
 # VPC Flow Log Cloudwatch Context
 # ------------------------------------------------------------------------------
 module "vpc_flow_logs_cloudwatch_context" {
-  source  = "SevenPico/context/null"
-  version = "2.0.0"
+  source     = "SevenPico/context/null"
+  version    = "2.0.0"
   context    = module.context.self
   attributes = ["vpc-flow-logs"]
 }
 
 module "vpc_flow_logs_cloudwatch_role_context" {
-  source  = "SevenPico/context/null"
-  version = "2.0.0"
+  source     = "SevenPico/context/null"
+  version    = "2.0.0"
   context    = module.vpc_flow_logs_cloudwatch_context.self
   attributes = ["role"]
 }

@@ -20,7 +20,7 @@
 ## ----------------------------------------------------------------------------
 
 variable "create_kms_key" {
-  type = bool
+  type    = bool
   default = false
 }
 
